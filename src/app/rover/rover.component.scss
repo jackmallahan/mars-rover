@@ -1,0 +1,27 @@
+.rover-form {
+  margin-top: 24px;
+
+  .dimension-container,
+  .coordinates-container {
+    width: 50%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &-input-number {
+    width: 45%;
+  }
+
+  &-input-third {
+    width: 30%;
+  }
+
+  &-input-full {
+    width: 100%;
+  }
+
+  button {
+    background-color: #1976d2;
+    margin-top: 24px;
+  }
+}

@@ -1,0 +1,87 @@
+<form class="rover-form">
+  <h2>Define Grid Dimensions</h2>
+  <div class="dimension-container">
+    <mat-form-field class="rover-form-input-number" appearance="fill">
+      <mat-label>Height</mat-label>
+      <input
+        matInput
+        type="number"
+        name="height"
+        placeholder="0"
+        [(ngModel)]="plateau.height"
+        required
+      />
+    </mat-form-field>
+
+    <mat-form-field class="rover-form-input-number" appearance="fill">
+      <mat-label>Width</mat-label>
+      <input
+        matInput
+        type="number"
+        name="width"
+        placeholder="0"
+        [(ngModel)]="plateau.width"
+        required
+      />
+    </mat-form-field>
+  </div>
+
+  <h2>Provide Starting Point</h2>
+  <div class="coordinates-container">
+    <mat-form-field class="rover-form-input-third" appearance="fill">
+      <mat-label>X</mat-label>
+      <input
+        matInput
+        type="number"
+        name="x-coordinate"
+        [(ngModel)]="rover.currentLocation.x"
+        required
+      />
+    </mat-form-field>
+    <mat-form-field class="rover-form-input-third" appearance="fill">
+      <mat-label>Y</mat-label>
+      <input
+        matInput
+        type="number"
+        name="y-coordinate"
+        [(ngModel)]="rover.currentLocation.y"
+        required
+      />
+    </mat-form-field>
+    <mat-form-field class="rover-form-input-third" appearance="fill">
+      <mat-label>Direction</mat-label>
+      <select
+        name="starting direction"
+        [(ngModel)]="rover.currentDirection"
+        matNativeControl
+        required
+      >
+        <!-- <mat-option *ngFor="let direction of directionsArray" [value]="direction.value"></mat-option> -->
+        <option value="N">N</option>
+        <option value="E">E</option>
+        <option value="S">S</option>
+        <option value="W">W</option>
+      </select>
+    </mat-form-field>
+  </div>
+
+  <h2>Provide Directions</h2>
+  <mat-form-field class="rover-form-input-full" appearance="fill">
+    <mat-label>Directions</mat-label>
+    <input
+      matInput
+      placeholder="ex. LMLMLMLMM"
+      (keypress)="filterInputDirections($event)"
+      [(ngModel)]="directions"
+      onPaste="return false"
+      name="directions"
+      autocomplete="off"
+      required
+    />
+    <mat-hint>Only "L", "R", and "M" are accepted</mat-hint>
+  </mat-form-field>
+
+  <button type="button" color="primary" mat-raised-button (click)="moveRover()">
+    Go Rover, Go!
+  </button>
+</form>
