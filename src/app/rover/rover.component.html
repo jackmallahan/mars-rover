@@ -1,25 +1,27 @@
-<form class="rover-form">
+<form class="rover-form" (input)="clearResults()">
   <h2>Define Grid Dimensions</h2>
   <div class="dimension-container">
-    <mat-form-field class="rover-form-input-number" appearance="fill">
+    <mat-form-field class="rover-form-plateau-input" appearance="fill">
       <mat-label>Height</mat-label>
       <input
         matInput
         type="number"
         name="height"
         placeholder="0"
+        min="0"
         [(ngModel)]="plateau.height"
         required
       />
     </mat-form-field>
 
-    <mat-form-field class="rover-form-input-number" appearance="fill">
+    <mat-form-field class="rover-form-plateau-input" appearance="fill">
       <mat-label>Width</mat-label>
       <input
         matInput
         type="number"
         name="width"
         placeholder="0"
+        min="0"
         [(ngModel)]="plateau.width"
         required
       />
@@ -28,7 +30,7 @@
 
   <h2>Provide Starting Point</h2>
   <div class="coordinates-container">
-    <mat-form-field class="rover-form-input-third" appearance="fill">
+    <mat-form-field class="rover-form-starting-input" appearance="fill">
       <mat-label>X</mat-label>
       <input
         matInput
@@ -38,7 +40,7 @@
         required
       />
     </mat-form-field>
-    <mat-form-field class="rover-form-input-third" appearance="fill">
+    <mat-form-field class="rover-form-starting-input" appearance="fill">
       <mat-label>Y</mat-label>
       <input
         matInput
@@ -48,7 +50,7 @@
         required
       />
     </mat-form-field>
-    <mat-form-field class="rover-form-input-third" appearance="fill">
+    <mat-form-field class="rover-form-starting-input" appearance="fill">
       <mat-label>Direction</mat-label>
       <select
         name="starting direction"
@@ -66,7 +68,7 @@
   </div>
 
   <h2>Provide Directions</h2>
-  <mat-form-field class="rover-form-input-full" appearance="fill">
+  <mat-form-field class="rover-form-directions-input" appearance="fill">
     <mat-label>Directions</mat-label>
     <input
       matInput
@@ -81,7 +83,20 @@
     <mat-hint>Only "L", "R", and "M" are accepted</mat-hint>
   </mat-form-field>
 
-  <button type="button" color="primary" mat-raised-button (click)="moveRover()">
+  <button
+    class="submit-rover-btn"
+    type="button"
+    color="primary"
+    mat-raised-button
+    (click)="moveRover()"
+  >
     Go Rover, Go!
   </button>
 </form>
+
+<div class="result" *ngIf="!!result">
+  <h2>Results</h2>
+  <div>{{ result }}</div>
+</div>
+
+<div class="invalid-directions" *ngIf="!!errorMessage">{{ errorMessage }}</div>

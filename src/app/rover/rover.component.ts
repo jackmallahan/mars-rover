@@ -15,11 +15,14 @@ export class RoverComponent implements OnInit {
   };
   cardinals = ['N', 'E', 'S', 'W'];
   directions = '';
+  errorMessage = '';
+  result = '';
+
   constructor() {}
 
   ngOnInit(): void {}
 
-  moveRover(): void {
+  moveRover() {
     console.log(this.rover, this.plateau);
     const directionArray = this.directions.split('');
     const validDirections = this.validateDirections(directionArray);
@@ -30,13 +33,15 @@ export class RoverComponent implements OnInit {
             this.rover.currentDirection,
             direction
           );
-        if (direction === 'M') this.move(direction);
+        if (direction === 'M') {
+          this.move(this.rover.currentDirection);
+        }
       });
     }
 
-    alert(
-      `${this.rover.currentLocation.x} ${this.rover.currentLocation.y} ${this.rover.currentDirection}`
-    );
+    if (!this.errorMessage) {
+      this.result = `${this.rover.currentLocation.x} ${this.rover.currentLocation.y} ${this.rover.currentDirection}`;
+    }
   }
 
   rotate(currentDirection: string, letter: string): string {
@@ -60,26 +65,31 @@ export class RoverComponent implements OnInit {
   }
 
   move(direction: string): void {
+    let validMove = false;
     if (
       direction === 'N' &&
       this.rover.currentLocation.y !== this.plateau.height
     ) {
       this.rover.currentLocation.y++;
+      validMove = true;
     }
-
-    switch (this.rover.currentDirection) {
-      case 'N':
-        this.rover.currentLocation.y;
-
-        break;
-      case 'E':
-        this.rover.currentLocation.x++;
-        break;
-      case 'S':
-        this.rover.currentLocation.y--;
-        break;
-      case 'W':
-        this.rover.currentLocation.x--;
+    if (
+      direction === 'E' &&
+      this.rover.currentLocation.x !== this.plateau.width
+    ) {
+      this.rover.currentLocation.x++;
+      validMove = true;
+    }
+    if (direction === 'S' && this.rover.currentLocation.y !== 0) {
+      this.rover.currentLocation.y--;
+      validMove = true;
+    }
+    if (direction === 'W' && this.rover.currentLocation.x !== 0) {
+      this.rover.currentLocation.x--;
+      validMove = true;
+    }
+    if (!validMove) {
+      this.errorMessage = `Invalid Directions: Cannot Move Rover from x:${this.rover.currentLocation.x}, y:${this.rover.currentLocation.y} to ${direction}`;
     }
   }
 
@@ -96,5 +106,10 @@ export class RoverComponent implements OnInit {
   validateDirections(directionArray: string[]): boolean {
     const validDirections = ['L', 'R', 'M'];
     return directionArray.every((letter) => validDirections.includes(letter));
+  }
+
+  clearResults(): void {
+    this.result = '';
+    this.errorMessage = '';
   }
 }

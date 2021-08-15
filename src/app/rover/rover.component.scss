@@ -8,20 +8,27 @@
     justify-content: space-between;
   }
 
-  &-input-number {
+  &-plateau-input {
     width: 45%;
   }
 
-  &-input-third {
+  &-starting-input {
     width: 30%;
   }
 
-  &-input-full {
-    width: 100%;
+  &-directions-input {
+    width: 50%;
   }
 
-  button {
+  .submit-rover-btn {
+    display: block;
     background-color: #1976d2;
     margin-top: 24px;
   }
+}
+
+.invalid-directions {
+  margin-top: 24px;
+  font-size: 20px;
+  color: #b2102f;
 }
