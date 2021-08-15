@@ -16,12 +16,12 @@ describe('RoverComponent', () => {
     fixture = TestBed.createComponent(RoverComponent);
     component = fixture.componentInstance;
     component.plateau = { height: 5, width: 5 };
-    component.rover = {
+    component.rovers[0] = {
       id: 0,
       currentDirection: 'N',
+      givenDirections: 'LMLMLMLMM',
       currentLocation: { x: 1, y: 2 },
     };
-    component.directions = 'LMLMLMLMM';
     fixture.detectChanges();
   });
 
@@ -30,17 +30,17 @@ describe('RoverComponent', () => {
   });
 
   it('moveRover should move rover to correct coordinates', () => {
-    expect(component.rover.currentLocation).toEqual({ x: 1, y: 2 });
-    component.moveRover();
+    expect(component.rovers[0].currentLocation).toEqual({ x: 1, y: 2 });
+    component.moveRover(0);
     expect(component.result).toEqual('1 3 N');
 
-    component.rover = {
+    component.rovers[1] = {
       id: 1,
       currentDirection: 'E',
+      givenDirections: 'MMRMMRMRRM',
       currentLocation: { x: 3, y: 3 },
     };
-    component.directions = 'MMRMMRMRRM';
-    component.moveRover();
+    component.moveRover(1);
     expect(component.result).toEqual('5 1 E');
   });
 
@@ -57,24 +57,24 @@ describe('RoverComponent', () => {
   });
 
   it('move should move the rover by one unit in correct direction', () => {
-    expect(component.rover.currentLocation).toEqual({ x: 1, y: 2 });
-    component.move('N');
-    expect(component.rover.currentLocation).toEqual({ x: 1, y: 3 });
-    component.move('E');
-    expect(component.rover.currentLocation).toEqual({ x: 2, y: 3 });
-    component.move('S');
-    expect(component.rover.currentLocation).toEqual({ x: 2, y: 2 });
-    component.move('W');
-    expect(component.rover.currentLocation).toEqual({ x: 1, y: 2 });
+    expect(component.rovers[0].currentLocation).toEqual({ x: 1, y: 2 });
+    component.move('N', 0);
+    expect(component.rovers[0].currentLocation).toEqual({ x: 1, y: 3 });
+    component.move('E', 0);
+    expect(component.rovers[0].currentLocation).toEqual({ x: 2, y: 3 });
+    component.move('S', 0);
+    expect(component.rovers[0].currentLocation).toEqual({ x: 2, y: 2 });
+    component.move('W', 0);
+    expect(component.rovers[0].currentLocation).toEqual({ x: 1, y: 2 });
   });
 
   it('move should not move the rover outside of boundary', () => {
-    expect(component.rover.currentLocation).toEqual({ x: 1, y: 2 });
-    component.move('W');
-    expect(component.rover.currentLocation).toEqual({ x: 0, y: 2 });
-    component.move('W');
-    expect(component.rover.currentLocation).not.toEqual({ x: -1, y: 2 });
-    expect(component.rover.currentLocation).toEqual({ x: 0, y: 2 });
+    expect(component.rovers[0].currentLocation).toEqual({ x: 1, y: 2 });
+    component.move('W', 0);
+    expect(component.rovers[0].currentLocation).toEqual({ x: 0, y: 2 });
+    component.move('W', 0);
+    expect(component.rovers[0].currentLocation).not.toEqual({ x: -1, y: 2 });
+    expect(component.rovers[0].currentLocation).toEqual({ x: 0, y: 2 });
   });
 
   it('validateDirections should return true with valid directions', () => {

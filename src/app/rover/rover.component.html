@@ -28,75 +28,81 @@
     </mat-form-field>
   </div>
 
-  <h2>Provide Starting Point</h2>
-  <div class="coordinates-container">
-    <mat-form-field class="rover-form-starting-input" appearance="fill">
-      <mat-label>X</mat-label>
+  <div *ngFor="let rover of rovers; let index = index">
+    <h2>Rover {{ index + 1 }}</h2>
+    <h3>Provide Starting Point</h3>
+    <div class="coordinates-container">
+      <mat-form-field class="rover-form-starting-input" appearance="fill">
+        <mat-label>X</mat-label>
+        <input
+          matInput
+          type="number"
+          name="rover-{{ index }}-x-coordinate"
+          [(ngModel)]="rover.currentLocation.x"
+          required
+        />
+      </mat-form-field>
+      <mat-form-field class="rover-form-starting-input" appearance="fill">
+        <mat-label>Y</mat-label>
+        <input
+          matInput
+          type="number"
+          name="rover-{{ index }}-y-coordinate"
+          [(ngModel)]="rover.currentLocation.y"
+          required
+        />
+      </mat-form-field>
+      <mat-form-field class="rover-form-starting-input" appearance="fill">
+        <mat-label>Direction</mat-label>
+        <select
+          name="rover-{{ index }}-starting-direction"
+          [(ngModel)]="rover.currentDirection"
+          matNativeControl
+          required
+        >
+          <!-- <mat-option *ngFor="let direction of directionsArray" [value]="direction.value"></mat-option> -->
+          <option value="N">N</option>
+          <option value="E">E</option>
+          <option value="S">S</option>
+          <option value="W">W</option>
+        </select>
+      </mat-form-field>
+    </div>
+
+    <h3>Provide Directions</h3>
+    <mat-form-field class="rover-form-directions-input" appearance="fill">
+      <mat-label>Directions</mat-label>
       <input
         matInput
-        type="number"
-        name="x-coordinate"
-        [(ngModel)]="rover.currentLocation.x"
+        placeholder="ex. LMLMLMLMM"
+        (keypress)="filterInputDirections($event)"
+        [(ngModel)]="rover.givenDirections"
+        onPaste="return false"
+        name="rover-{{ index }}-given-directions"
+        autocomplete="off"
         required
       />
-    </mat-form-field>
-    <mat-form-field class="rover-form-starting-input" appearance="fill">
-      <mat-label>Y</mat-label>
-      <input
-        matInput
-        type="number"
-        name="y-coordinate"
-        [(ngModel)]="rover.currentLocation.y"
-        required
-      />
-    </mat-form-field>
-    <mat-form-field class="rover-form-starting-input" appearance="fill">
-      <mat-label>Direction</mat-label>
-      <select
-        name="starting direction"
-        [(ngModel)]="rover.currentDirection"
-        matNativeControl
-        required
-      >
-        <!-- <mat-option *ngFor="let direction of directionsArray" [value]="direction.value"></mat-option> -->
-        <option value="N">N</option>
-        <option value="E">E</option>
-        <option value="S">S</option>
-        <option value="W">W</option>
-      </select>
+      <mat-hint>Only "L", "R", and "M" are accepted</mat-hint>
     </mat-form-field>
   </div>
-
-  <h2>Provide Directions</h2>
-  <mat-form-field class="rover-form-directions-input" appearance="fill">
-    <mat-label>Directions</mat-label>
-    <input
-      matInput
-      placeholder="ex. LMLMLMLMM"
-      (keypress)="filterInputDirections($event)"
-      [(ngModel)]="directions"
-      onPaste="return false"
-      name="directions"
-      autocomplete="off"
-      required
-    />
-    <mat-hint>Only "L", "R", and "M" are accepted</mat-hint>
-  </mat-form-field>
+  <button type="button" (click)="addRover()" mat-raised-button>
+    Add Rover
+  </button>
 
   <button
     class="submit-rover-btn"
     type="button"
     color="primary"
     mat-raised-button
-    (click)="moveRover()"
+    (click)="executeMoveRovers()"
   >
-    Go Rover, Go!
+    Go Rovers, Go!
   </button>
 </form>
 
 <div class="result" *ngIf="!!result">
   <h2>Results</h2>
-  <div>{{ result }}</div>
+  <div *ngFor="let r of result">{{ r }}</div>
 </div>
 
 <div class="invalid-directions" *ngIf="!!errorMessage">{{ errorMessage }}</div>

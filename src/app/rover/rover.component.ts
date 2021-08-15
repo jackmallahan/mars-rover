@@ -8,39 +8,49 @@ import { Rover, Plateau } from './rover-models';
 })
 export class RoverComponent implements OnInit {
   plateau: Plateau = {};
-  rover: Rover = {
-    id: 0,
-    currentDirection: 'N',
-    currentLocation: { x: 0, y: 0 },
-  };
+  rovers: Rover[] = [];
   cardinals = ['N', 'E', 'S', 'W'];
-  directions = '';
   errorMessage = '';
-  result = '';
+  result: string[] = [];
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.rovers.push({
+      id: 0,
+      currentDirection: 'N',
+      givenDirections: '',
+      currentLocation: { x: 0, y: 0 },
+    });
+  }
 
-  moveRover() {
-    console.log(this.rover, this.plateau);
-    const directionArray = this.directions.split('');
+  executeMoveRovers() {
+    this.rovers.forEach((rover, i) => {
+      this.moveRover(i);
+    });
+  }
+
+  moveRover(i: number) {
+    const directionArray = this.rovers[i].givenDirections.split('');
     const validDirections = this.validateDirections(directionArray);
     if (validDirections) {
-      directionArray.forEach((direction, i) => {
+      directionArray.forEach((direction) => {
         if (direction === 'L' || direction === 'R')
-          this.rover.currentDirection = this.rotate(
-            this.rover.currentDirection,
+          this.rovers[i].currentDirection = this.rotate(
+            this.rovers[i].currentDirection,
             direction
           );
         if (direction === 'M') {
-          this.move(this.rover.currentDirection);
+          this.move(this.rovers[i].currentDirection, i);
         }
       });
     }
 
     if (!this.errorMessage) {
-      this.result = `${this.rover.currentLocation.x} ${this.rover.currentLocation.y} ${this.rover.currentDirection}`;
+      this.result.push(
+        `${this.rovers[i].currentLocation.x} ${this.rovers[i].currentLocation.y} ${this.rovers[i].currentDirection}`
+      );
+      console.log(this.result);
     }
   }
 
@@ -64,32 +74,36 @@ export class RoverComponent implements OnInit {
     return '';
   }
 
-  move(direction: string): void {
+  move(direction: string, i: number): void {
     let validMove = false;
     if (
       direction === 'N' &&
-      this.rover.currentLocation.y !== this.plateau.height
+      this.rovers[i].currentLocation.y !== this.plateau.height
     ) {
-      this.rover.currentLocation.y++;
+      this.rovers[i].currentLocation.y++;
       validMove = true;
     }
     if (
       direction === 'E' &&
-      this.rover.currentLocation.x !== this.plateau.width
+      this.rovers[i].currentLocation.x !== this.plateau.width
     ) {
-      this.rover.currentLocation.x++;
+      this.rovers[i].currentLocation.x++;
       validMove = true;
     }
-    if (direction === 'S' && this.rover.currentLocation.y !== 0) {
-      this.rover.currentLocation.y--;
+    if (direction === 'S' && this.rovers[i].currentLocation.y !== 0) {
+      this.rovers[i].currentLocation.y--;
       validMove = true;
     }
-    if (direction === 'W' && this.rover.currentLocation.x !== 0) {
-      this.rover.currentLocation.x--;
+    if (direction === 'W' && this.rovers[i].currentLocation.x !== 0) {
+      this.rovers[i].currentLocation.x--;
       validMove = true;
     }
     if (!validMove) {
-      this.errorMessage = `Invalid Directions: Cannot Move Rover from x:${this.rover.currentLocation.x}, y:${this.rover.currentLocation.y} to ${direction}`;
+      this.errorMessage = `Invalid Directions: Cannot Move Rover ${
+        i + 1
+      } from x:${this.rovers[i].currentLocation.x}, y:${
+        this.rovers[i].currentLocation.y
+      } to ${direction}`;
     }
   }
 
@@ -109,7 +123,17 @@ export class RoverComponent implements OnInit {
   }
 
   clearResults(): void {
-    this.result = '';
+    this.result = [];
     this.errorMessage = '';
+  }
+
+  addRover(): void {
+    const id = this.rovers.length;
+    this.rovers.push({
+      id,
+      currentDirection: 'N',
+      givenDirections: '',
+      currentLocation: { x: 0, y: 0 },
+    });
   }
 }
