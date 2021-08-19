@@ -42,10 +42,28 @@ describe('RoverComponent', () => {
       givenDirections: 'MMRMMRMRRM',
       currentLocation: { x: 3, y: 3 },
     };
+
     expect(component.result).toEqual([]);
 
     component.executeMoveRovers();
     expect(component.result).toEqual(['1 3 N', '5 1 E']);
+  });
+
+  it('executeMoveRover should call openDialog if invalid directions are given', () => {
+    spyOn(component, 'openDialog');
+    expect(component.openDialog).not.toHaveBeenCalled();
+
+    // Give directions to go out of bounds
+    component.rovers = [
+      {
+        id: 1,
+        currentDirection: 'N',
+        givenDirections: 'MMMMM',
+        currentLocation: { x: 3, y: 3 },
+      },
+    ];
+    component.executeMoveRovers();
+    expect(component.openDialog).toHaveBeenCalled();
   });
 
   it('moveRover should move rover to correct coordinates', () => {
