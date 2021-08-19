@@ -33,7 +33,7 @@
   }
 
   .submit-rover-btn:disabled {
-    background-color: adjust-hue($color: lightgrey, $degrees: 5);
+    background-color: lightgrey;
     color: #fff;
   }
 }
