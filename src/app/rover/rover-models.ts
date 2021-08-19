@@ -9,3 +9,5 @@ export interface Plateau {
   height?: number;
   width?: number;
 }
+
+export const Cardinals = ['N', 'E', 'S', 'W'];

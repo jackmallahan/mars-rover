@@ -1,5 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { MaterialModule } from '../material/material.module';
 import { RoverComponent } from './rover.component';
 
 describe('RoverComponent', () => {
@@ -9,6 +12,7 @@ describe('RoverComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [RoverComponent],
+      imports: [FormsModule, MaterialModule, BrowserAnimationsModule],
     }).compileComponents();
   });
 
@@ -16,12 +20,14 @@ describe('RoverComponent', () => {
     fixture = TestBed.createComponent(RoverComponent);
     component = fixture.componentInstance;
     component.plateau = { height: 5, width: 5 };
-    component.rovers[0] = {
-      id: 0,
-      currentDirection: 'N',
-      givenDirections: 'LMLMLMLMM',
-      currentLocation: { x: 1, y: 2 },
-    };
+    component.rovers = [
+      {
+        id: 0,
+        currentDirection: 'N',
+        givenDirections: 'LMLMLMLMM',
+        currentLocation: { x: 1, y: 2 },
+      },
+    ];
     fixture.detectChanges();
   });
 
@@ -29,10 +35,23 @@ describe('RoverComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('executeMoveRover should produce correct result', () => {
+    component.rovers[1] = {
+      id: 1,
+      currentDirection: 'E',
+      givenDirections: 'MMRMMRMRRM',
+      currentLocation: { x: 3, y: 3 },
+    };
+    expect(component.result).toEqual([]);
+
+    component.executeMoveRovers();
+    expect(component.result).toEqual(['1 3 N', '5 1 E']);
+  });
+
   it('moveRover should move rover to correct coordinates', () => {
     expect(component.rovers[0].currentLocation).toEqual({ x: 1, y: 2 });
     component.moveRover(0);
-    expect(component.result).toEqual('1 3 N');
+    expect(component.rovers[0].currentLocation).toEqual({ x: 1, y: 3 });
 
     component.rovers[1] = {
       id: 1,
@@ -41,7 +60,7 @@ describe('RoverComponent', () => {
       currentLocation: { x: 3, y: 3 },
     };
     component.moveRover(1);
-    expect(component.result).toEqual('5 1 E');
+    expect(component.rovers[1].currentLocation).toEqual({ x: 5, y: 1 });
   });
 
   it('rotate should rotate rover 90 degrees', () => {
@@ -77,6 +96,19 @@ describe('RoverComponent', () => {
     expect(component.rovers[0].currentLocation).toEqual({ x: 0, y: 2 });
   });
 
+  it('collisionDetection should return true when rovers occupy same location', () => {
+    expect(component.rovers[0].currentLocation).toEqual({ x: 1, y: 2 });
+
+    component.rovers[1] = {
+      id: 1,
+      currentDirection: 'N',
+      givenDirections: '',
+      currentLocation: { x: 1, y: 1 },
+    };
+    component.move('N', 1);
+    expect(component.collisionDetection(component.rovers[1])).toBeTrue();
+  });
+
   it('validateDirections should return true with valid directions', () => {
     const validDirections = ['L', 'M', 'L', 'M', 'R', 'M'];
     expect(component.validateDirections(validDirections)).toBeTrue();
@@ -85,5 +117,46 @@ describe('RoverComponent', () => {
   it('validateDirections should return false with invalid directions', () => {
     const invalidDirections = ['Q', 'r', '$'];
     expect(component.validateDirections(invalidDirections)).toBeFalse();
+  });
+
+  it('addRover should add a rover', () => {
+    component.rovers = [];
+    expect(component.rovers.length).toEqual(0);
+    component.addRover();
+    expect(component.rovers.length).toEqual(1);
+  });
+
+  it('deleteRover should delete the last rover in the array', () => {
+    component.rovers = [
+      {
+        id: 0,
+        currentDirection: 'N',
+        givenDirections: 'LMLMLMLMM',
+        currentLocation: { x: 1, y: 2 },
+      },
+      {
+        id: 1,
+        currentDirection: 'N',
+        givenDirections: '',
+        currentLocation: { x: 1, y: 1 },
+      },
+    ];
+    expect(component.rovers.length).toEqual(2);
+    component.deleteRover();
+    expect(component.rovers.length).toEqual(1);
+  });
+
+  it('deleteRover should not delete if only one rover', () => {
+    component.rovers = [
+      {
+        id: 0,
+        currentDirection: 'N',
+        givenDirections: 'LMLMLMLMM',
+        currentLocation: { x: 1, y: 2 },
+      },
+    ];
+    expect(component.rovers.length).toEqual(1);
+    component.deleteRover();
+    expect(component.rovers.length).toEqual(1);
   });
 });

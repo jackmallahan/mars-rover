@@ -1,15 +1,16 @@
 .rover-form {
+  width: 100%;
   margin-top: 24px;
 
   .dimension-container,
   .coordinates-container {
-    width: 50%;
+    width: 100%;
     display: flex;
     justify-content: space-between;
   }
 
   &-plateau-input {
-    width: 45%;
+    width: 48%;
   }
 
   &-starting-input {
@@ -17,7 +18,12 @@
   }
 
   &-directions-input {
-    width: 50%;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .add-rover-btn {
+    margin-top: 5px;
   }
 
   .submit-rover-btn {
@@ -25,6 +31,16 @@
     background-color: #1976d2;
     margin-top: 24px;
   }
+
+  .submit-rover-btn:disabled {
+    background-color: adjust-hue($color: lightgrey, $degrees: 5);
+    color: #fff;
+  }
+}
+
+.result-section {
+  width: 33%;
+  margin-top: 24px;
 }
 
 .invalid-directions {

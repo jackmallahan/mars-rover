@@ -1,4 +1,9 @@
-<form class="rover-form" (input)="clearResults()">
+<form
+  class="rover-form"
+  (ngSubmit)="executeMoveRovers()"
+  #roverForm="ngForm"
+  (input)="clearResults()"
+>
   <h2>Define Grid Dimensions</h2>
   <div class="dimension-container">
     <mat-form-field class="rover-form-plateau-input" appearance="fill">
@@ -37,6 +42,7 @@
         <input
           matInput
           type="number"
+          min="0"
           name="rover-{{ index }}-x-coordinate"
           [(ngModel)]="rover.currentLocation.x"
           required
@@ -47,6 +53,7 @@
         <input
           matInput
           type="number"
+          min="0"
           name="rover-{{ index }}-y-coordinate"
           [(ngModel)]="rover.currentLocation.y"
           required
@@ -85,24 +92,35 @@
       <mat-hint>Only "L", "R", and "M" are accepted</mat-hint>
     </mat-form-field>
   </div>
-  <button type="button" (click)="addRover()" mat-raised-button>
+
+  <button
+    class="add-rover-btn"
+    type="button"
+    (click)="addRover()"
+    mat-raised-button
+  >
     Add Rover
   </button>
 
   <button
-    class="submit-rover-btn"
+    class="delete-rover-btn"
     type="button"
+    (click)="deleteRover()"
+    *ngIf="rovers.length > 1"
+    color="warn"
+    mat-button
+  >
+    Delete Rover
+  </button>
+
+  <button
+    class="submit-rover-btn"
+    type="submit"
     color="primary"
+    [disabled]="!roverForm.form.valid"
     mat-raised-button
-    (click)="executeMoveRovers()"
+    (click)="(executeMoveRovers)"
   >
     Go Rovers, Go!
   </button>
 </form>
-
-<div class="result" *ngIf="!!result">
-  <h2>Results</h2>
-  <div *ngFor="let r of result">{{ r }}</div>
-</div>
-
-<div class="invalid-directions" *ngIf="!!errorMessage">{{ errorMessage }}</div>
