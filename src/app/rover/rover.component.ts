@@ -44,6 +44,7 @@ export class RoverComponent implements OnInit {
   }
 
   moveRover(i: number) {
+    // create array of directions to iterate through
     const directionArray = this.rovers[i].givenDirections.split('');
     const validDirections = this.validateDirections(directionArray);
 
@@ -133,6 +134,7 @@ export class RoverComponent implements OnInit {
   }
 
   collisionDetection(rover: Rover): boolean {
+    // Loop through rovers to detect if any rovers occupy same location
     return this.rovers.some((r) => {
       return (
         r.id !== rover.id &&
